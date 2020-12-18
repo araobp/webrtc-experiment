@@ -12,4 +12,7 @@ In this project, I will study WebRTC that will be a critical part of Digital Twi
 
 I used to be a SIP expert, so I have already understood the communication protocols standardized by IETF. This time, I will study WebRTC's JavaScript APIs standardized by W3C.
 
-## 
+## Sub-projects
+
+- [video element](./video)
+
