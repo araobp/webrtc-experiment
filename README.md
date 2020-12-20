@@ -1,4 +1,4 @@
-# webrtc-experiment
+# WebRTC experiments
 
 (Work in progress)
 
