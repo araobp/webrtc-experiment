@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>OpenCV.js test</title>
+<link rel="stylesheet" href="../css/default.css">
+</head>
+<body>
+<h2>OpenCV.js test</h2>
+<a href="https://docs.opencv.org/3.4/d0/d84/tutorial_js_usage.html">Reference</a>
+<hr>
+
+<p id="status" style="color: red;">OpenCV.js is loading...</p>
+<div>
+    <table cellpadding="0" cellspacing="0" width="0" border="0">
+    <tr>
+        <td>
+            <img id="imageSrc" alt="No Image" class="small" />
+        </td>
+        <td>
+            <canvas id="canvasOutput" class="small" height="300px"></canvas>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="caption">imageSrc <input type="file" id="fileInput" name="file" accept="image/*" /></div>
+        </td>
+        <td>
+            <div class="caption">canvasOutput</div>
+        </td>
+    </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+let imgElement = document.getElementById('imageSrc');
+let inputElement = document.getElementById('fileInput');
+inputElement.addEventListener('change', (e) => {
+    imgElement.src = URL.createObjectURL(e.target.files[0]);
+}, false);
+
+imgElement.onload = function() {
+    let mat = cv.imread(imgElement);
+    cv.imshow('canvasOutput', mat);
+    mat.delete();
+};
+
+function onOpenCvReady() { // eslint-disable-line no-unused-vars
+    let status = document.getElementById('status');
+    status.style.color = "blue";
+    status.innerHTML = 'OpenCV.js is ready.';
+}
+
+function onOpenCvError() { // eslint-disable-line no-unused-vars
+    let element = document.getElementById('status');
+    element.setAttribute('class', 'err');
+    element.innerHTML = 'Failed to load opencv.js';
+}
+</script>
+<script async src="./opencv.js" type="text/javascript" onload="onOpenCvReady();" onerror="onOpenCvError();"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<head>
+  <title>getUserMedia() test</title>
+  <link rel="stylesheet" href="../css/default.css">
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+</head>
+
+<body>
+  <h1>getUserMedia() test</h1>
+  
+  <video autoplay></video>
+
+  <script>
+
+    const constraints = {
+        video: 
+        {
+          width: { min: 640 },
+          height: { min: 480 }
+        }
+        ,
+    };
+
+    const video = document.querySelector("video");
+
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      video.srcObject = stream;
+    });
+    
+  </script>
+
+</body>
+
+</html>
+
+
