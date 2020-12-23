@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Obtaining screen resolution</title>
+  <link rel="stylesheet" href="../css/default.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+<body>
+  <h1>Screen resolution</h1>
+
+  <div id="app">
+    {{ message }}
+  </div>
+
+  <script>
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!'
+      }
+    });
+
+    let width = screen.width;
+    let height = screen.height;
+    app.message = width + ' x ' + height + ' pixels';
+
+  </script>
+
+</body>
+
+</html>
+
+
