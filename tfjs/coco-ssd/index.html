@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../css/default.css">
+  <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+  <!-- Load the coco-ssd model. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+
+  <style>
+    .img {
+      position: absolute;
+      z-index: 1;
+    }
+
+    #bndbox {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <H1>TensorFlow.js with COCO-SSD</H1>
+
+  <p id="loading_status">Loading COCO-SSD model...</p>
+
+  <br>
+
+  <input id="input" type='file' />
+
+  <hr>
+
+  <div>
+    <img class="img" id="img" width="640" width="360">
+    <canvas class="canvas" id="bndbox">
+  </div>
+
+  <script type="text/javascript">
+
+    let bndbox = document.getElementById("bndbox");
+    let ctx = bndbox.getContext("2d");
+
+    let img = document.getElementById('img');
+    let isLoaded = false;
+
+    //Load the model.
+    cocoSsd.load().then(model => {
+      isLoaded = true;
+      updateText();
+      tf.setBackend('webgl');
+      console.log(tf.getBackend());
+    });
+
+    function startPredictions(model, img) {
+      model.detect(img).then(predictions => {
+        predictions.map((item, index) => {
+          console.log(item);
+          if (item.class == "person") {
+            drawBndbox(item);
+          }
+        });
+      });
+    }
+
+    function resizeCanvas(element) {
+      let w = element.offsetWidth;
+      let h = element.offsetHeight;
+      let cv = document.getElementById("bndbox");
+      cv.width = w;
+      cv.height = h;
+    }
+
+    function drawBndbox(item) {
+      ctx.beginPath();
+      ctx.rect(item.bbox[0], item.bbox[1], item.bbox[2], item.bbox[3]);
+      ctx.strokeStyle = '#FF0000';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    //Image loading 
+    window.addEventListener('load', function() {
+      document.querySelector('input').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          let img = document.querySelector('img');
+          img.src = URL.createObjectURL(this.files[0]);
+          img.onload = imageIsLoaded;
+        }
+      });
+    });
+
+    function imageIsLoaded() {
+      resizeCanvas(img);
+      cocoSsd.load().then(model => {
+        if (isLoaded) {
+          startPredictions(model, img);
+        }
+      });
+    }
+
+    function updateText() {
+      let title = document.getElementById("loading_status");
+      title.textContent = "Model loaded successfully";
+    }
+  </script>
+</body>
+
+</html>
