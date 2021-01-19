@@ -31,19 +31,17 @@
   <video id="callee-video" width="400px" autoplay muted playsinline></video>
 
   <script>
+
     let localStream;
   
-    // カメラ映像取得
-    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    //navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    navigator.mediaDevices.getDisplayMedia({video: true})
       .then( stream => {
-      // 成功時にvideo要素にカメラ映像をセットし、再生
       const videoElm = document.getElementById('caller-video');
       videoElm.srcObject = stream;
       videoElm.play();
-      // 着信時に相手にカメラ映像を返せるように、グローバル変数に保存しておく
       localStream = stream;
     }).catch( error => {
-      // 失敗時にはエラーログを出力
       console.error('mediaDevice.getUserMedia() error:', error);
       return;
     });
@@ -51,10 +49,8 @@
     let peer = null;
 
     function connect() {
-
       let apiKey = document.getElementById("api_key").value
       
-      //Peer作成
       peer = new Peer({
         key: apiKey,
         debug: 3
@@ -62,29 +58,33 @@
 
       peer.on('open', () => {
         document.getElementById('callerId').innerHTML = peer.id;
-      });
 
-      //着信処理
-      peer.on('call', mediaConnection => {
-        mediaConnection.answer(localStream);
-        setEventListener(mediaConnection);
+        peer.on('call', mediaConnection => {
+          mediaConnection.answer(localStream);
+          setEventListener(mediaConnection);
+        });
+
+        peer.on('close', () => {
+          alert('disconnected');
+        });
       });
     }
 
     function call() {
+      if (peer != null) {
         const calleeId = document.getElementById('calleeId').value;
         const mediaConnection = peer.call(calleeId, localStream);
         setEventListener(mediaConnection);
       }
+    }
 
-      function setEventListener(mediaConnection) {
-        mediaConnection.on('stream', stream => {
-          // video要素にカメラ映像をセットして再生
-          const videoElm = document.getElementById('callee-video')
-          videoElm.srcObject = stream;
-          videoElm.play();
-        });
-      }
+    function setEventListener(mediaConnection) {
+      mediaConnection.on('stream', stream => {
+        const videoElm = document.getElementById('callee-video')
+        videoElm.srcObject = stream;
+        videoElm.play();
+      });
+    }
   </script>
 </body>
 </html>
