@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-4.2.0.js"></script>
+  <title>SkyWay test</title>
+  <style>
+    body {
+      text-align:center;
+    }
+    h1 {
+      font-family: Arial;
+      font-size: 2em;
+    }
+  </style>
+</head>
+<body>
+
+  <H1>NTT Communications SkyWay test</H1>
+
+  <p>API Key：<input type="text" id="api_key" size="33"> <button type="button" onclick="connect()">Connect</button></p>
+
+  <p>Caller's peer ID: <span id="my-id">(Unknown)</span></p>
+
+  <p><input type="text" id="callee"></input> <button type="button" onclick="call()">Initiate call</button></p>
+
+  <br>
+
+  <video id="caller-video" width="400px" autoplay muted playsinline></video>
+  <video id="callee-video" width="400px" autoplay muted playsinline></video>
+
+  <script>
+    let localStream;
+  
+    // カメラ映像取得
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+      .then( stream => {
+      // 成功時にvideo要素にカメラ映像をセットし、再生
+      const videoElm = document.getElementById('caller-video');
+      videoElm.srcObject = stream;
+      videoElm.play();
+      // 着信時に相手にカメラ映像を返せるように、グローバル変数に保存しておく
+      localStream = stream;
+    }).catch( error => {
+      // 失敗時にはエラーログを出力
+      console.error('mediaDevice.getUserMedia() error:', error);
+      return;
+    });
+
+    function connect() {
+
+      let apiKey = document.getElementById("api_key").value
+      
+      //Peer作成
+      const peer = new Peer({
+        key: apiKey,
+        debug: 3
+      });
+
+      peer.on('open', () => {
+        document.getElementById('my-id').innerHTML = peer.id;
+      });
+
+      //着信処理
+      peer.on('call', mediaConnection => {
+        mediaConnection.answer(localStream);
+        setEventListener(mediaConnection);
+      });
+      
+      function call() {
+        const calleeId = document.getElementById('callee').value;
+        const mediaConnection = peer.call(calleeID, localStream);
+        setEventListener(mediaConnection);
+      }
+
+      function setEventListener(mediaConnection) {
+        mediaConnection.on('stream', stream => {
+          // video要素にカメラ映像をセットして再生
+          const videoElm = document.getElementById('callee-video')
+          videoElm.srcObject = stream;
+          videoElm.play();
+        });
+      }
+
+    }
+
+  </script>
+</body>
+</html>
