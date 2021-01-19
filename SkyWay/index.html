@@ -19,11 +19,11 @@
 
   <H1>NTT Communications SkyWay test</H1>
 
-  <p>API Key：<input type="text" id="api_key" size="33"> <button type="button" onclick="connect()">Connect</button></p>
+  <p>API Key：<input type="text" id="api_key" size="33"></input> <button type="button" onclick="connect()">Connect</button></p>
 
-  <p>Caller's peer ID: <span id="my-id">(Unknown)</span></p>
+  <p>Caller's peer ID: <span id="callerId">(Unknown)</span></p>
 
-  <p><input type="text" id="callee"></input> <button type="button" onclick="call()">Initiate call</button></p>
+  <p><input type="text" id="calleeId"></input> <button type="button" onclick="call()">Initiate call</button></p>
 
   <br>
 
@@ -48,18 +48,20 @@
       return;
     });
 
+    let peer = null;
+
     function connect() {
 
       let apiKey = document.getElementById("api_key").value
       
       //Peer作成
-      const peer = new Peer({
+      peer = new Peer({
         key: apiKey,
         debug: 3
       });
 
       peer.on('open', () => {
-        document.getElementById('my-id').innerHTML = peer.id;
+        document.getElementById('callerId').innerHTML = peer.id;
       });
 
       //着信処理
@@ -67,10 +69,11 @@
         mediaConnection.answer(localStream);
         setEventListener(mediaConnection);
       });
-      
-      function call() {
-        const calleeId = document.getElementById('callee').value;
-        const mediaConnection = peer.call(calleeID, localStream);
+    }
+
+    function call() {
+        const calleeId = document.getElementById('calleeId').value;
+        const mediaConnection = peer.call(calleeId, localStream);
         setEventListener(mediaConnection);
       }
 
@@ -82,9 +85,6 @@
           videoElm.play();
         });
       }
-
-    }
-
   </script>
 </body>
 </html>
