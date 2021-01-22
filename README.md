@@ -22,9 +22,11 @@ That's it.
 
 ## My other projects on WebRTC
 
-These days I have been testing Unity Render Streaming. However, honestly speaking, I would rather prefer "just streaming screen capture" than Unity Render Streaming -- Unity Render Streaming is very complicated.
+These days I have been testing Unity Render Streaming. However, honestly speaking, I would rather prefer "just streaming screen capture" than Unity Render Streaming, for digital twin creation -- Unity Render Streaming is very complicated.
 
-- [RenderStreaming] (https://github.com/araobp/unity-excavator/tree/master/RenderStreaming)
+- [RenderStreaming](https://github.com/araobp/unity-excavator/tree/master/RenderStreaming)
+
+NTT Communications provides a very nice (and also very simple) WebRTC platform service. What an excellent company NTT Communications is!
 
 ## WebRTC servers
 
