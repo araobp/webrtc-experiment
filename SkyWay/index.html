@@ -15,6 +15,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <H1>NTT Communications SkyWay test</H1>
@@ -27,8 +28,12 @@
 
   <br>
 
-  <video id="caller-video" width="400px" autoplay muted playsinline></video>
+  <video id="caller-video" width="400px" autoplay muted playsinLine></video>
   <video id="callee-video" width="400px" autoplay muted playsinline></video>
+
+  <br>
+
+  <button type="button" onclick="fullscreen()">Fullscreen</button>
 
   <script>
 
@@ -80,10 +85,17 @@
 
     function setEventListener(mediaConnection) {
       mediaConnection.on('stream', stream => {
-        const videoElm = document.getElementById('callee-video')
+        const videoElm = document.getElementById('callee-video');
         videoElm.srcObject = stream;
         videoElm.play();
       });
+    }
+
+    function fullscreen() {
+      if (peer != null) {
+        const videlElm = document.getElementById('callee-video');
+        videlElm.requestFullscreen();
+      }
     }
   </script>
 </body>
